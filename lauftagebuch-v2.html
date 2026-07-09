@@ -88,8 +88,9 @@
   .year-stat-item { text-align: center; }
   .year-stat-val { font-family: var(--mono); font-size: 17px; font-weight: 600; }
   .year-stat-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.4px; font-weight: 600; }
-  .table-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .table-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; box-shadow: var(--shadow-sm); }
+  table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 13px; }
+  #yearTable { min-width: 980px; }
   thead { background: var(--table-head-bg); }
   th { padding: 11px 16px; text-align: left; font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-dim); cursor: pointer; user-select: none; white-space: nowrap; border-bottom: 1px solid var(--border); }
   th:hover { color: var(--text); }
