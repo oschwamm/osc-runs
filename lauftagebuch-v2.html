@@ -52,6 +52,8 @@
   .tab { padding: 7px 14px; font-size: 13px; font-weight: 500; color: var(--text-dim); cursor: pointer; border-radius: 7px; white-space: nowrap; transition: all 0.15s; border: none; background: none; font-family: var(--font); }
   .tab:hover { color: var(--text); background: var(--accent-glow); }
   .tab.active { color: var(--accent); background: var(--accent-glow); font-weight: 600; }
+  .nav-select { display: none; width: 100%; min-width: 0; height: 40px; padding: 0 40px 0 14px; border: 1px solid var(--border); border-radius: 8px; background-color: var(--bg-input); color: var(--text); font-family: var(--font); font-size: 15px; font-weight: 600; appearance: none; -webkit-appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--text-dim) 50%), linear-gradient(135deg, var(--text-dim) 50%, transparent 50%); background-position: calc(100% - 20px) 50%, calc(100% - 15px) 50%; background-size: 5px 5px; background-repeat: no-repeat; }
+  .nav-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
   .btn { font-family: var(--font); font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
   .btn:hover { border-color: var(--text-muted); }
   .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
@@ -147,6 +149,12 @@
     .year-stats { flex-wrap: wrap; gap: 12px; }
   }
   @media (max-width: 600px) {
+    .header { padding: 0 16px; }
+    .header-inner { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "logo theme" "nav nav"; align-items: center; gap: 10px 12px; height: auto; padding: 12px 0; }
+    .logo { grid-area: logo; min-width: 0; }
+    .theme-area { grid-area: theme; margin-left: 0; }
+    .tabs { display: none; }
+    .nav-select { display: block; grid-area: nav; }
     .dash-hero { grid-template-columns: 1fr; }
     .main { padding: 16px; }
     .stat-value { font-size: 22px; }
@@ -162,6 +170,7 @@
       Lauftagebuch
     </div>
     <div class="tabs" id="tabs"></div>
+    <select class="nav-select" id="navSelect" aria-label="Ansicht auswählen" onchange="navigate(this.value)"></select>
     <div class="theme-area">
       <span class="theme-icon">☀️</span>
       <button class="theme-toggle" id="themeToggle" title="Theme wechseln"></button>
@@ -521,12 +530,22 @@ let currentPage = 'dashboard';
 function init() { renderTabs(); navigate(currentPage); }
 function renderTabs() {
   const tabs = document.getElementById('tabs');
+  const navSelect = document.getElementById('navSelect');
   const years = getYears();
   let html = `<button class="tab ${currentPage==='dashboard'?'active':''}" onclick="navigate('dashboard')">◈ Dashboard</button>`;
   html += `<button class="tab ${currentPage==='trends'?'active':''}" onclick="navigate('trends')">📈 Trends</button>`;
   years.forEach(y => { html += `<button class="tab ${currentPage===y?'active':''}" onclick="navigate('${y}')">${y}</button>`; });
   html += `<button class="tab ${currentPage==='add'?'active':''}" onclick="navigate('add')" style="color:var(--green);font-weight:600">+ Neuer Lauf</button>`;
   tabs.innerHTML = html;
+  if (navSelect) {
+    const options = [
+      ['dashboard', 'Dashboard'],
+      ['trends', 'Trends'],
+      ...years.map(y => [y, y]),
+      ['add', '+ Neuer Lauf']
+    ];
+    navSelect.innerHTML = options.map(([value, label]) => `<option value="${value}" ${currentPage===value?'selected':''}>${label}</option>`).join('');
+  }
 }
 function navigate(page) {
   currentPage = page;
